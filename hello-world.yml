@@ -1,37 +1,24 @@
+resources:
+  - name: repo
+    type: git
+    source:
+      uri: https://github.com/JonathanMabiala/concourse-pipeline.git
+      branch: dev
+
 jobs:
   - name: hello-world-job
-    plan:
-      - task: hello-world-task
+    plan: # represents steps
+      - get: repo
+        trigger: true
+      - task: hello-world-task # represents a step
         config:
           platform: linux
           image_resource:
             type: registry-image
             source:
               repository: busybox
-          outputs:
-          - name: the-artifact
-          run:
-            path: sh
-            args:
-            - -cx
-            - |
-              ls -l .
-              echo "hello from another step!" > the-artifact/message
-
-      - task: read-the-artifact
-        config:
-          platform: linux
-          image_resource:
-            type: registry-image
-            source:
-              repository: busybox
-          # To receive "the artifact", specify it as an input
           inputs:
-          - name: the-artifact
+            - name: repo
           run:
-            path: sh
-            args:
-            - -cx
-            - |
-              ls -l . 
-              cat the-artifact/message
+            path: cat
+            args: ["repo/README.md"]
