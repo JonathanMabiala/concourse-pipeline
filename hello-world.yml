@@ -3,7 +3,7 @@ resources:
     type: git
     source:
       uri: https://github.com/JonathanMabiala/concourse-pipeline.git
-    branch: dev
+      branch: dev
 
 jobs:
   - name: hello-world-job
@@ -18,7 +18,7 @@ jobs:
             source:
               repository: busybox
           inputs:
-          - name: repo
+            - name: repo
           run:
             path: cat
             args: ["repo/README.md"]
